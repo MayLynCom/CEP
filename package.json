@@ -1,0 +1,12 @@
+{
+  "name": "cep-distance-calculator",
+  "version": "1.0.0",
+  "description": "Calculadora de distancia entre CEPs usando Google Distance Matrix.",
+  "main": "netlify/functions/distance.js",
+  "scripts": {
+    "dev": "netlify dev"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  }
+}
