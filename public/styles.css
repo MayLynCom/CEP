@@ -58,7 +58,16 @@ input {
   font-size: 1rem;
 }
 
-input:focus {
+select {
+  padding: 0.75rem 1rem;
+  border-radius: 0.6rem;
+  border: 1px solid #cbd5f5;
+  font-size: 1rem;
+  background-color: #fff;
+}
+
+input:focus,
+select:focus {
   outline: 2px solid #3b82f6;
   border-color: transparent;
 }

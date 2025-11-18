@@ -13,6 +13,8 @@ form.addEventListener("submit", async (event) => {
   const destinationCep = sanitizeCep(
     document.getElementById("destination-cep").value || ""
   );
+  const vehicleType =
+    document.getElementById("vehicle-type").value || "carro";
 
   if (vehicleCep.length !== 8 || destinationCep.length !== 8) {
     showError("Informe dois CEPs validos com 8 digitos.");
@@ -24,7 +26,8 @@ form.addEventListener("submit", async (event) => {
   try {
     const { distanceKm, price } = await fetchDistanceData(
       vehicleCep,
-      destinationCep
+      destinationCep,
+      vehicleType
     );
     distanceEl.textContent = `${distanceKm.toFixed(2)} km`;
     priceEl.textContent = formatCurrency(price);
@@ -36,7 +39,7 @@ form.addEventListener("submit", async (event) => {
   }
 });
 
-async function fetchDistanceData(vehicleCep, destinationCep) {
+async function fetchDistanceData(vehicleCep, destinationCep, vehicleType) {
   let response;
   try {
     response = await fetch("/.netlify/functions/distance", {
@@ -44,7 +47,7 @@ async function fetchDistanceData(vehicleCep, destinationCep) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ vehicleCep, destinationCep }),
+      body: JSON.stringify({ vehicleCep, destinationCep, vehicleType }),
     });
   } catch (error) {
     throw new Error("Falha ao se conectar com o servidor.");

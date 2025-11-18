@@ -21,6 +21,7 @@ exports.handler = async (event) => {
 
   const vehicleCep = sanitizeCep(body.vehicleCep);
   const destinationCep = sanitizeCep(body.destinationCep);
+  const vehicleType = (body.vehicleType || "carro").toString().toLowerCase();
 
   if (vehicleCep.length !== 8 || destinationCep.length !== 8) {
     return respond(400, {
@@ -42,7 +43,7 @@ exports.handler = async (event) => {
 
     return respond(200, {
       distanceKm: totalKm,
-      price: calculatePrice(totalKm),
+      price: calculatePrice(totalKm, vehicleType),
     });
   } catch (error) {
     return respond(500, {
@@ -96,12 +97,21 @@ function mapElementStatusToMessage(status) {
   }
 }
 
-function calculatePrice(distanceKm) {
+function calculatePrice(distanceKm, vehicleType) {
+  const rules = {
+    carro: { base: 150, extra: 3.5 },
+    moto: { base: 150, extra: 3.5 },
+    utilitario: { base: 190, extra: 3.9 },
+    semipesado: { base: 250, extra: 4.5 },
+  };
+
+  const { base, extra } = rules[vehicleType] || rules.carro;
+
   if (distanceKm <= 40) {
-    return 150;
+    return base;
   }
-  const extraKm = distanceKm - 40;
-  return 150 + extraKm * 3.5;
+
+  return base + (distanceKm - 40) * extra;
 }
 
 function respond(statusCode, body) {
